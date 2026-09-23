@@ -1,6 +1,6 @@
 # VOLSHI
 
-**Infrastructure for autonomous intelligence.**
+**Building the span between machine intelligence and human experience.**
 
 VOLSHI builds the span between machine intelligence and human experience.
 
