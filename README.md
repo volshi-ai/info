@@ -87,6 +87,17 @@ Current research and engineering focus includes evidence and provenance, externa
 
 - [Research](https://volshi.com/#research)
 
+## Systems
+
+Public documentation for VOLSHI systems lives in this repo, one folder per system:
+
+- [arche](./arche/) — ARCHE
+- [archemada](./archemada/) — ARCHEMADA
+- [erie](./erie/) — ERIE
+- [peep](./peep/) — PEEP
+- [ratter](./ratter/) — RATTER
+- [sherlock](./sherlock/) — SHERLOCK
+
 ## Company
 
 VOLSHI is building infrastructure for intelligent systems that have to operate continuously, change over time, and remain accountable for what they knew, learned, and did.
