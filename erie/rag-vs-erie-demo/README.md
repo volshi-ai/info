@@ -21,4 +21,4 @@ This demo accompanies the RAG vs ERIE paper: RAG gives the model soup and asks i
 
 ## Live demo
 
-https://muse.ai/s/rag-vs-erie-demo-xao6yxixdrx0zjxa/BEPuqfOLbz1dJlx-w4dIEyua0nC1sBNOX_K4P--HSeM
+https://volshi-ai.github.io/info/erie/rag-vs-erie-demo/
