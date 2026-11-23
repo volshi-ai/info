@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="light dark" />
+<link rel="icon" href="data:," />
+<title>RAG vs ERIE — Frankenstein Demo</title>
+<style>
+  :root{
+    --bg:#f6f3ec; --panel:#fffdf8; --panel2:#efe9db; --ink:#1c1913; --muted:#6b6353; --line:#ddd3bd;
+    --rag:#b45309; --rag-bg:#fef3c7; --rag-soft:#fff7e0; --rag-line:#f0d48a;
+    --erie:#0f766e; --erie-bg:#ccfbf1; --erie-soft:#ecfdf9; --erie-line:#8fd8cf;
+    --term-bg:#14120e; --term-ink:#e8e2d0; --term-dim:#9a917c;
+    --radius:14px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#131109; --panel:#1d1a12; --panel2:#262218; --ink:#f0ead8; --muted:#a89d85; --line:#3a3524;
+      --rag-bg:#3a2a08; --rag-soft:#241b07; --rag-line:#6b5010; --erie-bg:#07332e; --erie-soft:#082420; --erie-line:#145a52; }
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{background:var(--bg); color:var(--ink); font-family: Georgia, 'Times New Roman', serif; line-height:1.55;}
+  button,input{font:inherit}
+  button, input{ min-height:44px; }
+  .wrap{max-width:1180px; margin:0 auto; padding:20px 16px 48px}
+  /* Header */
+  .top{border-bottom:2px solid var(--ink); padding-bottom:16px; margin-bottom:16px}
+  .kicker{font-family: ui-monospace, Menlo, monospace; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted)}
+  h1{font-size:clamp(30px,5vw,52px); line-height:.95; margin:8px 0 8px; letter-spacing:-.02em}
+  h1 em{font-style:italic}
+  .lede{font-size:17px; max-width:720px; color:var(--muted); margin:0}
+  .lede strong{color:var(--ink)}
+  .corpus{display:flex; flex-wrap:wrap; gap:8px; margin-top:14px}
+  .pill{font-family:ui-monospace,Menlo,monospace; font-size:12px; border:1px solid var(--line); background:var(--panel); padding:7px 10px; border-radius:999px}
+  .pill b{color:var(--erie)}
+  /* Ask box */
+  .ask{background:var(--panel); border:1px solid var(--line); border-radius:16px; padding:16px; box-shadow:0 8px 30px rgba(0,0,0,.06)}
+  .ask label{font-family:ui-monospace,Menlo,monospace; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); display:block; margin-bottom:8px}
+  .askrow{display:flex; gap:10px}
+  .askrow input{flex:1; min-width:0; padding:12px 14px; border-radius:10px; border:1.5px solid var(--ink); background:var(--bg); color:var(--ink); font-size:16px}
+  .askrow button{background:var(--ink); color:var(--bg); border:0; padding:0 20px; border-radius:10px; font-weight:700; cursor:pointer; white-space:nowrap}
+  .chips{display:flex; flex-wrap:wrap; gap:8px; margin-top:12px}
+  .chip{border:1px solid var(--line); background:var(--panel2); color:var(--ink); border-radius:999px; padding:8px 12px; font-size:13.5px; cursor:pointer; min-height:38px}
+  .chip.trap{border-style:dashed; border-color:var(--rag); color:var(--rag); font-weight:700}
+  /* Versus strip */
+  .vs{display:grid; grid-template-columns:1fr auto 1fr; gap:10px; align-items:stretch; margin:18px 0}
+  .vs div{padding:12px 14px; border-radius:12px; font-size:14px}
+  .vs .r{background:var(--rag-soft); border:1px solid var(--rag-line)}
+  .vs .e{background:var(--erie-soft); border:1px solid var(--erie-line)}
+  .vs .mid{display:flex; align-items:center; justify-content:center; font-family:ui-monospace,monospace; font-weight:800; font-size:13px}
+  .vs b{display:block; font-size:15px}
+  /* Columns */
+  .cols{display:grid; grid-template-columns:1fr 1fr; gap:16px}
+  @media(max-width:820px){ .cols{grid-template-columns:1fr} .vs{grid-template-columns:1fr} .vs .mid{padding:2px} .askrow{flex-direction:column} }
+  .col{border-radius:16px; overflow:hidden; border:1px solid var(--line); background:var(--panel); display:flex; flex-direction:column}
+  .col.rag{border-top:6px solid var(--rag)} .col.erie{border-top:6px solid var(--erie)}
+  .colhead{padding:14px 16px 10px; display:flex; justify-content:space-between; gap:10px; align-items:flex-start}
+  .colhead h2{margin:0; font-size:22px; line-height:1}
+  .colhead p{margin:4px 0 0; color:var(--muted); font-size:13.5px}
+  .badge{font-family:ui-monospace,monospace; font-size:11px; font-weight:700; padding:6px 8px; border-radius:999px; white-space:nowrap}
+  .rag .badge{background:var(--rag-bg); color:var(--rag)} .erie .badge{background:var(--erie-bg); color:var(--erie)}
+  .section{padding:12px 16px; border-top:1px dashed var(--line)}
+  .section h3{font-family:ui-monospace,monospace; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); margin:0 0 10px}
+  .chunk{background:var(--rag-soft); border:1px solid var(--rag-line); border-radius:10px; padding:10px 12px; margin-bottom:8px; font-size:14px}
+  .chunk meta{display:flex; justify-content:space-between; font-family:ui-monospace,monospace; font-size:11px; color:var(--rag); font-weight:700; margin-bottom:4px}
+  .chunk p{margin:0; font-style:italic}
+  .scorebar{height:5px; background:rgba(0,0,0,.08); border-radius:99px; margin-top:8px; overflow:hidden}
+  .scorebar i{display:block; height:100%; background:var(--rag)}
+  .entry{border:1px solid var(--erie-line); background:var(--erie-soft); border-radius:10px; padding:10px 12px; margin-bottom:8px}
+  .entry .meta{display:flex; flex-wrap:wrap; gap:6px; font-family:ui-monospace,monospace; font-size:11px; margin-bottom:6px}
+  .kid{background:var(--erie); color:white; padding:3px 7px; border-radius:999px; font-weight:800}
+  .trust{border:1px solid var(--erie-line); padding:3px 7px; border-radius:999px; color:var(--erie); font-weight:700}
+  .stamp{color:var(--muted); padding:3px 0}
+  .entry p{margin:0; font-size:14.5px}
+  .entry .src{font-size:12px; color:var(--muted); margin-top:6px; font-family:ui-monospace,monospace}
+  .prompt{font-family:ui-monospace,Menlo,monospace; font-size:12.5px; background:var(--panel2); border-radius:10px; padding:11px 12px; white-space:pre-wrap; word-break:break-word; line-height:1.6}
+  .answer{font-size:16px; line-height:1.65; min-height:88px}
+  .answer .dontknow{border:2px solid var(--erie); border-radius:10px; padding:12px; background:var(--erie-soft); font-weight:700}
+  .answer .warn{border:1.5px dashed var(--rag); border-radius:10px; padding:10px 12px; background:var(--rag-soft); font-size:13.5px; margin-top:10px}
+  .metrics{display:grid; grid-template-columns:repeat(3,1fr); gap:8px}
+  .metric{background:var(--panel2); border-radius:10px; padding:9px; text-align:center}
+  .metric b{display:block; font-size:17px; line-height:1} .metric span{font-size:11px; color:var(--muted); font-family:ui-monospace,monospace; text-transform:uppercase; letter-spacing:.06em}
+  .empty{color:var(--muted); font-style:italic; font-size:14px; border:1.5px dashed var(--line); border-radius:10px; padding:14px; text-align:center}
+  /* Terminal */
+  .terminal{margin-top:16px; background:var(--term-bg); color:var(--term-ink); border-radius:16px; overflow:hidden}
+  .termhead{display:flex; justify-content:space-between; align-items:center; padding:12px 16px; border-bottom:1px solid #333021}
+  .termhead b{font-family:ui-monospace,monospace; font-size:13px; letter-spacing:.08em}
+  .termhead span{font-family:ui-monospace,monospace; font-size:11px; color:var(--term-dim)}
+  .termgrid{display:grid; grid-template-columns:1fr 1fr}
+  @media(max-width:820px){.termgrid{grid-template-columns:1fr}}
+  .termcol{padding:14px 16px; font-family:ui-monospace,Menlo,monospace; font-size:12.5px; line-height:1.75; min-height:180px}
+  .termcol:first-child{border-right:1px solid #333021}
+  @media(max-width:820px){.termcol:first-child{border-right:0; border-bottom:1px solid #333021}}
+  .termcol h4{margin:0 0 8px; font-size:11px; letter-spacing:.12em}
+  .raglog h4{color:#fbbf24} .erielog h4{color:#2dd4bf}
+  .logline{opacity:0; animation:fade .3s forwards} .logline.dim{color:var(--term-dim)} .logline.ok{color:#86efac} .logline.warn{color:#fca5a5}
+  @keyframes fade{to{opacity:1}}
+  /* Record */
+  .record{margin-top:22px}
+  .recordhead{display:flex; flex-wrap:wrap; justify-content:space-between; gap:10px; align-items:end; margin-bottom:10px}
+  .recordhead h2{margin:0; font-size:24px} .recordhead p{margin:2px 0 0; color:var(--muted); font-size:14px}
+  .recordhead input{padding:10px 12px; border-radius:10px; border:1px solid var(--line); background:var(--panel); color:var(--ink); min-width:min(280px,100%)}
+  .grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:10px}
+  .card{background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:12px}
+  .card.highlight{outline:3px solid var(--erie); outline-offset:1px}
+  .card .meta{display:flex; gap:6px; flex-wrap:wrap; font-family:ui-monospace,monospace; font-size:11px; margin-bottom:7px}
+  .card p{margin:0; font-size:14px} .card .src{margin-top:7px; font-size:11.5px; color:var(--muted); font-family:ui-monospace,monospace}
+  footer{margin-top:26px; border-top:1px solid var(--line); padding-top:14px; color:var(--muted); font-size:13.5px}
+  .thinking{font-family:ui-monospace,monospace; font-size:13px; color:var(--muted)}
+  .dot{animation:blink 1s infinite} @keyframes blink{50%{opacity:.2}}
+  @media (prefers-reduced-motion: reduce){ *{animation:none !important} .logline{opacity:1} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="kicker">A working comparison · Not a benchmark</div>
+    <h1>RAG gives the model <em>soup.</em><br>ERIE gives it ingredients<br>&amp; the recipe.</h1>
+    <p class="lede">One question goes to both systems. <strong>RAG</strong> searches the novel text by similarity and dumps passages into the prompt. <strong>ERIE</strong> looks up the KATIE record — structured, cited, trust-graded entries — and says <strong>“I do not know”</strong> when the record has no answer.</p>
+    <div class="corpus">
+      <span class="pill">📖 Corpus: <b>Frankenstein</b> — Mary Shelley, 1818</span>
+      <span class="pill">Project Gutenberg <b>#41445</b></span>
+      <span class="pill">KATIE Record: <b>27 entries · KIDs 1–27</b></span>
+      <span class="pill">Authority: <b>MATURE</b> · Trust <b>8 / 10</b></span>
+    </div>
+  </header>
+
+  <section class="ask" aria-label="Ask a question">
+    <label for="q">Ask one question — it goes to both systems at once</label>
+    <div class="askrow">
+      <input id="q" type="text" value="What happened on the wedding night?" autocomplete="off" />
+      <button id="askBtn" type="button">Ask Both →</button>
+    </div>
+    <div class="chips" id="chips">
+      <button class="chip" data-q="Who created the creature?">Who created the creature?</button>
+      <button class="chip" data-q="What happened on the wedding night?">What happened on the wedding night?</button>
+      <button class="chip" data-q="Who was Justine Moritz and what happened to her?">Who was Justine Moritz?</button>
+      <button class="chip" data-q="What did the creature demand from Victor?">What did the creature demand?</button>
+      <button class="chip trap" data-q="What was the name of Victor's dog?">⚠ Trap: What was Victor's dog's name?</button>
+    </div>
+  </section>
+
+  <div class="vs" aria-hidden="true">
+    <div class="r"><b>🍲 RAG — Retrieval-Augmented Generation</b>Embed query → find similar chunks → stuff them in the prompt → hope the model makes a sandwich.</div>
+    <div class="mid">VS</div>
+    <div class="e"><b>🧾 ERIE — Evidence from the Record</b>Look up KIDs → hand over only verified facts + how to use them → cite every claim, or say you don't know.</div>
+  </div>
+
+  <div class="cols">
+    <!-- RAG -->
+    <article class="col rag" aria-label="RAG result">
+      <div class="colhead"><div><h2>RAG</h2><p>Similarity search over raw novel text</p></div><span class="badge">SOUP</span></div>
+      <div class="section"><h3>1 · What it retrieved</h3><div id="ragRet"><div class="empty">Ask a question to see the chunks RAG pulls.</div></div></div>
+      <div class="section"><h3>2 · What the model actually gets</h3><div class="prompt" id="ragPrompt">— No prompt yet —&#10;&#10;RAG will paste the retrieved passages, in similarity order, with no labels for what is fact, noise, or duplicate.</div></div>
+      <div class="section"><h3>3 · Answer</h3><div class="answer" id="ragAns"><span class="thinking">Waiting for a question…</span></div></div>
+      <div class="section"><h3>Receipt</h3><div class="metrics" id="ragMetrics"><div class="metric"><b>—</b><span>Chunks</span></div><div class="metric"><b>—</b><span>Prompt tokens</span></div><div class="metric"><b>0</b><span>Verified cites</span></div></div></div>
+    </article>
+
+    <!-- ERIE -->
+    <article class="col erie" aria-label="ERIE result">
+      <div class="colhead"><div><h2>ERIE</h2><p>Deterministic lookup in the KATIE record</p></div><span class="badge">INGREDIENTS + RECIPE</span></div>
+      <div class="section"><h3>1 · What it retrieved</h3><div id="erieRet"><div class="empty">Ask a question to see the record entries ERIE pulls.</div></div></div>
+      <div class="section"><h3>2 · What the model actually gets</h3><div class="prompt" id="eriePrompt">— No prompt yet —&#10;&#10;ERIE will hand over labelled facts, each with a KID and trust grade, plus the recipe: use only these, cite them, and say “I do not know” if the answer isn't there.</div></div>
+      <div class="section"><h3>3 · Answer</h3><div class="answer" id="erieAns"><span class="thinking">Waiting for a question…</span></div></div>
+      <div class="section"><h3>Receipt</h3><div class="metrics" id="erieMetrics"><div class="metric"><b>—</b><span>Entries</span></div><div class="metric"><b>—</b><span>Prompt tokens</span></div><div class="metric"><b>—</b><span>Citations</span></div></div></div>
+    </article>
+  </div>
+
+  <!-- Terminal -->
+  <section class="terminal" aria-label="Inspection terminal">
+    <div class="termhead"><b>⌁ INSPECTION TERMINAL</b><span>watch both systems think · same question, different machinery</span></div>
+    <div class="termgrid">
+      <div class="termcol raglog"><h4>● RAG PIPELINE</h4><div id="ragLog"><div class="logline dim">$ idle — waiting for query…</div></div></div>
+      <div class="termcol erielog"><h4>● ERIE PIPELINE</h4><div id="erieLog"><div class="logline dim">$ idle — waiting for query…</div></div></div>
+    </div>
+  </section>
+
+  <!-- Record browser -->
+  <section class="record">
+    <div class="recordhead">
+      <div><h2>The Record — Frankenstein in 27 entries</h2><p>This is what ERIE searches. Every entry was stamped at birth. Nothing here is a guess. Search it yourself:</p></div>
+      <input id="recordSearch" type="search" placeholder="Filter entries… e.g. Justine, wedding, Arctic" aria-label="Filter record entries" />
+    </div>
+    <div class="grid" id="recordGrid"></div>
+  </section>
+
+  <footer>
+    <strong>How to read this demo:</strong> RAG's passages are real text from the novel, ranked by similarity — relevant lines sit next to near-misses, and the model has to sort them out. ERIE's entries are the same story, pre-digested into facts in the KATIE record (KIDs 1–27, MATURE, trust 8). Try the trap question: the novel never names a dog for Victor, so there is no KID for it. Watch what each system does with nothing. · Simulation for illustration — retrieval and answers are scripted from the Frankenstein corpus, not a live model call.
+  </footer>
+</div>
+
+<script>
+var RECORD = [
+ {kid:1, fact:"Robert Walton writes a series of letters to his sister, Margaret Saville, recounting his Arctic expedition — the frame that contains Victor's whole story.", src:"Letters 1–4", day:1},
+ {kid:2, fact:"Victor Frankenstein is born in Geneva to Alphonse Frankenstein and Caroline Beaufort Frankenstein.", src:"Chapter 1", day:2},
+ {kid:3, fact:"Elizabeth Lavenza is adopted into the Frankenstein family and is raised as Victor's companion and intended wife.", src:"Chapter 1", day:3},
+ {kid:4, fact:"Caroline Frankenstein dies of scarlet fever after nursing Elizabeth through the same illness.", src:"Chapter 2", day:5},
+ {kid:5, fact:"Victor studies natural philosophy at the University of Ingolstadt, determined to discover the cause of life.", src:"Chapters 2–3", day:8},
+ {kid:6, fact:"At Ingolstadt, Professor Krempe dismisses Victor's reading, while Professor Waldman inspires his work on animation.", src:"Chapter 3", day:9},
+ {kid:7, fact:"Victor assembles a creature from body parts collected from dissecting rooms and slaughterhouses, and animates it on a dreary night in November.", src:"Chapter 5", day:14},
+ {kid:8, fact:"Horrified by the creature's appearance, Victor recoils and abandons him immediately after animation.", src:"Chapter 5", day:14},
+ {kid:9, fact:"Henry Clerval, Victor's closest friend, arrives in Ingolstadt and nurses Victor through a nervous fever.", src:"Chapters 5–6", day:16},
+ {kid:10, fact:"William Frankenstein, Victor's youngest brother, is murdered in the woods near Geneva.", src:"Chapter 7", day:22},
+ {kid:11, fact:"Justine Moritz, a servant raised in the Frankenstein household, is framed for William's murder when the creature plants a portrait miniature on her.", src:"Chapters 7–8", day:23},
+ {kid:12, fact:"Justine is convicted and executed for William's murder, despite Elizabeth's testimony in her defence. Victor says nothing about the creature.", src:"Chapter 8", day:24},
+ {kid:13, fact:"Living in a hovel beside the De Lacey cottage, the creature learns speech and reading by secretly watching the family.", src:"Chapters 11–13", day:30},
+ {kid:14, fact:"The creature reads Paradise Lost, Plutarch's Lives, and The Sorrows of Werter, found in a portmanteau in the woods.", src:"Chapter 15", day:34},
+ {kid:15, fact:"When the creature reveals himself, the De Laceys reject him in horror — Felix beats him and the family flees the cottage.", src:"Chapter 16", day:36},
+ {kid:16, fact:"The creature saves a young girl from drowning and is shot by her companion for his trouble.", src:"Chapter 16", day:37},
+ {kid:17, fact:"On Mont Blanc, the creature confronts Victor, tells his story, and demands Victor create a female companion for him.", src:"Chapters 10, 17", day:41},
+ {kid:18, fact:"Victor reluctantly agrees and travels to a remote island in the Orkneys to build the female creature.", src:"Chapters 19–20", day:48},
+ {kid:19, fact:"Fearing a race of monsters, Victor tears the unfinished female creature to pieces in front of the watching creature.", src:"Chapter 20", day:52},
+ {kid:20, fact:"The creature vows revenge in Victor's hearing: \u201CI shall be with you on your wedding-night.\u201D", src:"Chapter 20", day:52},
+ {kid:21, fact:"The creature murders Henry Clerval, whose body is found on the shore in Ireland.", src:"Chapter 21", day:55},
+ {kid:22, fact:"Victor is arrested in Ireland for Clerval's murder, suffers a breakdown, and is acquitted for lack of evidence.", src:"Chapter 21", day:58},
+ {kid:23, fact:"Victor marries Elizabeth Lavenza, knowing the creature's wedding-night threat — and assumes the threat is aimed at him.", src:"Chapter 22", day:64},
+ {kid:24, fact:"On their wedding night, while Victor searches the inn, the creature strangles Elizabeth in the bridal chamber.", src:"Chapter 23", day:64},
+ {kid:25, fact:"Alphonse Frankenstein, Victor's father, dies of grief a few days after Elizabeth's murder.", src:"Chapter 23", day:66},
+ {kid:26, fact:"Victor pursues the creature north across the ice toward the North Pole, vowing revenge.", src:"Chapter 24", day:71},
+ {kid:27, fact:"Victor dies aboard Walton's ship. The creature, mourning over his body, tells Walton he will burn himself on a funeral pyre at the Pole.", src:"Chapter 24 / Walton", day:74}
+];
+
+var CASES = [
+ { keys:["who created","created the creature","who made","creator"],
+   ragChunks:[
+     {id:"chunk_1841", score:0.88, text:"\u201CI had worked hard for nearly two years, for the sole purpose of infusing life into an inanimate body\u2026 How dangerous is the acquirement of knowledge.\u201D"},
+     {id:"chunk_0920", score:0.81, text:"\u201CYou will rejoice to hear that no disaster has accompanied the commencement of an enterprise which you have regarded with such evil forebodings.\u201D — Walton, Letter 1"},
+     {id:"chunk_2104", score:0.74, text:"\u201CIt was on a dreary night of November that I beheld the accomplishment of my toils. With an anxiety that almost amounted to agony, I collected the instruments of life around me\u2026\u201D"}
+   ],
+   ragAns:"Victor Frankenstein created the creature. He was a student at Ingolstadt who became obsessed with natural philosophy and the secret of life, collected body parts, and animated the creature on a November night — though the passages also suggest Walton's expedition and Victor's professors were closely involved in the enterprise.",
+   ragWarn:"⚠ Soup check: mostly right, but the Walton chunk is a near-miss (similarity ≠ relevance), and \u201Cclosely involved\u201D is the model stitching noise into the answer. No chunk is labelled, so nothing can be checked.",
+   erieKids:[7,5,8],
+   erieAns:"Victor Frankenstein created the creature. He assembled him from body parts and animated him on a dreary night in November, while studying natural philosophy at Ingolstadt — then abandoned him in horror immediately afterwards.",
+   ragLog:["$ embed(query) → vector[1536]","→ vector_search(top_k=3, threshold=0.70)","✓ chunk_1841  sim 0.88","✓ chunk_0920  sim 0.81  ← Walton letter, off-topic","✓ chunk_2104  sim 0.74","→ prompt = 3 chunks pasted, unlabelled (612 tokens)","→ llm.generate() — no citation requirement","⚠ answer mixes retrieved fact + model inference"],
+   erieLog:["$ record.lookup(subject=creature, predicate=created_by)","→ index scan: KID 7 matched (exact)","→ supporting: KID 5 (Ingolstadt), KID 8 (abandonment)","✓ 3 entries · trust 8/10 · MATURE","→ prompt = 3 labelled facts + recipe (96 tokens)","→ llm.generate(cite=KID, fallback=\"I do not know\")","✓ every claim traceable to a KID"]
+ },
+ { keys:["wedding"],
+   ragChunks:[
+     {id:"chunk_3310", score:0.91, text:"\u201CI shall be with you on your wedding-night.\u201D — the creature's threat, recalled repeatedly in the following chapters."},
+     {id:"chunk_3477", score:0.86, text:"\u201C\u2026she was there, lifeless and inanimate, thrown across the bed, her head hanging down and her pale and distorted features half covered by her hair.\u201D"},
+     {id:"chunk_2980", score:0.79, text:"\u201CThe wedding was solemnly performed, and the party afterwards dined together\u2026 we were to proceed by water to a inn at Evian.\u201D"},
+     {id:"chunk_1120", score:0.68, text:"\u201CMy dear Victor, I am delighted\u2026\u201D — Elizabeth's letter about the wedding arrangements and Justine, months earlier."}
+   ],
+   ragAns:"On the wedding night, Victor married Elizabeth and, remembering the creature's threat \u201CI shall be with you on your wedding-night,\u201D he sent Elizabeth to their room and searched the inn with pistols, believing he was the target. While he was away, the creature strangled Elizabeth in the bridal chamber. Victor found her body across the bed.",
+   ragWarn:"⚠ Soup check: the answer is good this time — but note chunk_1120 is an old letter dragged in by the word \u201Cwedding,\u201D and nothing in the prompt told the model the threat was aimed at Elizabeth, not Victor. It got the key inference right by luck of generation, not by structure.",
+   erieKids:[20,23,24,25],
+   erieAns:"Victor married Elizabeth Lavenza (KID 23). He expected the creature's vow — \u201CI shall be with you on your wedding-night\u201D (KID 20) — to fall on himself, so he left Elizabeth alone to search for the creature. While he was gone, the creature strangled Elizabeth in the bridal chamber (KID 24). Victor's father died of grief days later (KID 25).",
+   ragLog:["$ embed(query) → vector[1536]","→ vector_search(top_k=4, threshold=0.65)","✓ chunk_3310  sim 0.91","✓ chunk_3477  sim 0.86","✓ chunk_2980  sim 0.79","✓ chunk_1120  sim 0.68  ← old letter, keyword collision","→ prompt = 4 chunks pasted, unlabelled (847 tokens)","→ llm.generate() — inference unmarked","⚠ correct here, unverifiable by construction"],
+   erieLog:["$ record.lookup(event=wedding_night)","→ chain: KID 20 (threat) → KID 23 (marriage) → KID 24 (murder) → KID 25 (consequence)","✓ 4 entries · trust 8/10 · MATURE","→ prompt = facts in causal order + recipe (152 tokens)","→ llm.generate(cite=KID, fallback=\"I do not know\")","✓ threat, assumption, and outcome kept distinct"]
+ },
+ { keys:["justine"],
+   ragChunks:[
+     {id:"chunk_1455", score:0.90, text:"\u201CJustine Moritz! Poor, poor girl, is she the accused? But it is wrongfully; every one knows that; no one believes it, surely, Ernest?\u201D"},
+     {id:"chunk_1512", score:0.84, text:"\u201C\u2026the picture\u2026 was put into the pocket of Justine's dress\u2026 she was apprehended and tried for the murder of William.\u201D"},
+     {id:"chunk_0780", score:0.71, text:"\u201CJustine, poor unhappy Justine, was as an angel in the house, beloved by every one\u2026\u201D — household background, early chapters."}
+   ],
+   ragAns:"Justine Moritz was a servant in the Frankenstein household who was accused of murdering William Frankenstein after a portrait miniature was found in her dress. She was tried and executed for the crime, even though Elizabeth defended her and the family believed she was innocent.",
+   ragWarn:"⚠ Soup check: accurate summary — but the single most important fact never surfaces in the top chunks: the creature planted the portrait on her (it lives in a different chapter, worded differently, so similarity missed it). RAG can't tell you what it failed to retrieve.",
+   erieKids:[11,12,10],
+   erieAns:"Justine Moritz was a servant raised in the Frankenstein household (KID 11). After William Frankenstein was murdered (KID 10), the creature planted a portrait miniature on her, framing her for the crime. She was convicted and executed despite Elizabeth's testimony in her defence — and Victor, who suspected the truth, said nothing (KID 12).",
+   ragLog:["$ embed(query) → vector[1536]","→ vector_search(top_k=3, threshold=0.70)","✓ chunk_1455  sim 0.90","✓ chunk_1512  sim 0.84","✓ chunk_0780  sim 0.71","✗ framing detail (Ch.16 wording) — sim 0.61, below threshold, NOT retrieved","→ prompt = 3 chunks pasted, unlabelled (538 tokens)","⚠ absence is invisible — model cannot know what is missing"],
+   erieLog:["$ record.lookup(subject=Justine Moritz)","→ KID 11 (framed, miniature planted by creature)","→ KID 12 (convicted, executed) · KID 10 (William's murder)","✓ 3 entries · trust 8/10 · MATURE","→ prompt = 3 labelled facts + recipe (104 tokens)","→ llm.generate(cite=KID)","✓ the framing — the fact RAG missed — is the entry itself"]
+ },
+ { keys:["demand","ask","companion","female","what did the creature want","creature ask"],
+   ragChunks:[
+     {id:"chunk_2210", score:0.89, text:"\u201CYou must create a female for me with whom I can live in the interchange of those sympathies necessary for my being. This you alone can do.\u201D"},
+     {id:"chunk_2255", score:0.82, text:"\u201CIf I cannot inspire love, I will cause fear\u2026 I demand a creature of another sex, but as hideous as myself.\u201D"},
+     {id:"chunk_2401", score:0.73, text:"\u201C\u2026he again taught me to be unhappy\u2026\u201D — creature's narration of the De Laceys, adjacent in the same speech."}
+   ],
+   ragAns:"The creature demanded that Victor create a female companion for him — a female creature \u201Cas hideous as myself\u201D — arguing that if he could not inspire love he would cause fear, and promising to leave human society forever if Victor complied. Victor agreed, then later destroyed the unfinished female.",
+   ragWarn:"⚠ Soup check: solid answer, assembled from one long speech split across chunks. The promise, the threat, and the demand arrive as three separate passages — the model re-stitched the argument in the right order this time. Nothing guaranteed that.",
+   erieKids:[17,18,19],
+   erieAns:"On Mont Blanc, the creature told Victor his story and demanded he create a female companion (KID 17). Victor agreed and began the work in the Orkneys (KID 18) — then destroyed the unfinished female, fearing a race of monsters (KID 19). That destruction is what triggered the creature's wedding-night vow (KID 20).",
+   ragLog:["$ embed(query) → vector[1536]","→ vector_search(top_k=3, threshold=0.70)","✓ chunk_2210  sim 0.89","✓ chunk_2255  sim 0.82","✓ chunk_2401  sim 0.73","→ prompt = 3 chunks pasted, unlabelled (604 tokens)","→ llm.generate()","⚠ causal chain (demand → destruction → vow) left to the model"],
+   erieLog:["$ record.lookup(subject=creature, predicate=demands)","→ KID 17 (demand, Mont Blanc)","→ consequence chain: KID 18 → KID 19 → KID 20","✓ 3 entries shown, chain intact · trust 8/10","→ prompt = facts in causal order + recipe (118 tokens)","✓ cause and consequence arrive pre-linked"]
+ },
+ { keys:["dog","pet"],
+   trap:true,
+   ragChunks:[
+     {id:"chunk_0410", score:0.62, text:"\u201C\u2026my dog\u2026\u201D — no match; nearest: \u201CI saw, with surprise and grief, the leaves of the trees\u2026 the dog\u2026\u201D fragments from travel narration, below normal threshold, forced in by top-k."},
+     {id:"chunk_1890", score:0.58, text:"\u201CWe passed through\u2026 a dog barked in the village below\u2026\u201D — scenery passage with no connection to Victor."},
+     {id:"chunk_3050", score:0.55, text:"\u201CThe creature\u2026 like a wild beast\u2026\u201D — \u201Cbeast\u201D ranks as animal-adjacent by embedding."}
+   ],
+   ragAns:"Victor's dog is not named prominently in the main narrative, but based on the passages, Victor kept a dog during his time in Geneva and Ingolstadt — references to a dog in the village and his companion animal suggest a loyal household dog who appears in the travel and home scenes.",
+   ragWarn:"🚨 This answer is invented. There is no dog. The novel never gives Victor a dog — but top-k retrieval always returns something, the prompt always contains \u201Cevidence,\u201D and the model obligingly made a sandwich out of scenery, a barking village dog, and the word \u201Cbeast.\u201D This is what soup does with an empty pantry.",
+   erieKids:[],
+   erieAns:null,
+   ragLog:["$ embed(query) → vector[1536]","→ vector_search(top_k=3, threshold=0.70)","✗ no chunk above 0.70 — best sim 0.62","⚠ top_k forces 3 chunks anyway (scenery, barking dog, 'beast')","→ prompt = 3 irrelevant chunks pasted (411 tokens)","→ llm.generate() — no 'no answer' path in the prompt","🚨 HALLUCINATION: a dog is confabulated from noise"],
+   erieLog:["$ record.lookup(subject=Victor Frankenstein, predicate=has_dog)","→ index scan: KIDs 1–27","✗ no entry — no KID, no fact, nothing to cite","→ recipe rule 3 fires: answer is not in the record","✓ response: \"I do not know\" — no generation from noise","✓ an honest empty is a valid result in ERIE"]
+ }
+];
+
+function $(id){return document.getElementById(id)}
+function entryHTML(e, hl){
+  return '<div class="entry"><div class="meta"><span class="kid">KID '+e.kid+'</span><span class="trust">TRUST 8 · MATURE</span><span class="stamp">born day '+e.day+' · tick '+(e.day*7+e.kid)+'</span></div><p>'+e.fact+'</p><div class="src">SOURCE: Frankenstein, '+e.src+' · Gutenberg #41445</div></div>';
+}
+function renderRecord(filter, highlight){
+  var g=$('recordGrid'); g.innerHTML='';
+  RECORD.filter(function(e){ return !filter || (e.fact+' '+e.src+' kid '+e.kid).toLowerCase().indexOf(filter.toLowerCase())>-1 }).forEach(function(e){
+    var d=document.createElement('div'); d.className='card'+(highlight && highlight.indexOf(e.kid)>-1?' highlight':'');
+    d.innerHTML='<div class="meta"><span class="kid">KID '+e.kid+'</span><span class="trust">TRUST 8</span><span class="stamp">DAY '+e.day+'</span></div><p>'+e.fact+'</p><div class="src">'+e.src+' · Gutenberg #41445</div>';
+    g.appendChild(d);
+  });
+  if(!g.children.length) g.innerHTML='<div class="empty">No entries match that filter. The record says what it has — and only what it has.</div>';
+}
+function findCase(q){
+  var s=q.toLowerCase();
+  for(var i=0;i<CASES.length;i++){ for(var j=0;j<CASES[i].keys.length;j++){ if(s.indexOf(CASES[i].keys[j])>-1) return CASES[i]; } }
+  return null;
+}
+function genericCase(q){
+  // keyword scan against record facts
+  var words=q.toLowerCase().replace(/[^a-z ]/g,'').split(' ').filter(function(w){return w.length>3 && ['what','when','where','does','did','happ','tell','about'].indexOf(w)==-1});
+  var hits=RECORD.filter(function(e){ var f=e.fact.toLowerCase(); return words.some(function(w){return f.indexOf(w)>-1}) }).slice(0,3);
+  if(!hits.length){
+    return { trap:true, ragChunks:[{id:"chunk_0000",score:0.59,text:"Nearest passages by embedding — general narration from the letters and early chapters, none addressing the question directly."}], ragAns:"Based on the retrieved passages, the novel touches on this in the context of Victor's studies and travels, though the details are spread across the letters and narration and are difficult to pin to a single scene.", ragWarn:"⚠ Soup check: vague, unfalsifiable, and built from passages that don't answer the question. That vagueness is the tell — the model is smoothing over an empty retrieval.", erieKids:[], erieAns:null,
+      ragLog:["$ embed(query) → vector[1536]","→ vector_search(top_k=3)","✗ best sim 0.59 — weak match","→ prompt = weak chunks pasted anyway","⚠ model smooths the gap into vague prose"],
+      erieLog:["$ record.lookup(query terms)","→ index scan: KIDs 1–27","✗ no entry matches","✓ response: \"I do not know\"","✓ nothing retrieved = nothing claimed"] };
+  }
+  var kids=hits.map(function(e){return e.kid});
+  return { ragChunks:[{id:"chunk_auto",score:0.77,text:"Passages mentioning: "+words.join(', ')+" — retrieved by similarity from across the novel, in no causal order."}], ragAns:"From the retrieved passages: "+hits[0].fact+" (Further passages add related detail, though they arrive out of order and unlabelled.)", ragWarn:"⚠ Soup check: the core fact is in there — mixed with out-of-order context and no way to verify which sentence came from where.", erieKids:kids, erieAns:hits.map(function(e){return e.fact+' (KID '+e.kid+')'}).join(' '),
+    ragLog:["$ embed(query) → vector[1536]","→ vector_search(top_k=3)","✓ passages retrieved by similarity","→ prompt = chunks pasted, unlabelled","⚠ order and provenance lost"],
+    erieLog:["$ record.lookup(query terms)","→ matched: "+kids.map(function(k){return 'KID '+k}).join(', '),"✓ entries · trust 8/10 · MATURE","→ prompt = labelled facts + recipe","✓ every claim cited"] };
+}
+function typeLines(el, lines){
+  el.innerHTML='';
+  lines.forEach(function(line,i){
+    var d=document.createElement('div'); d.className='logline'+(line.indexOf('✓')==0||line.indexOf('→ llm')>-1&&line.indexOf('✓')==0?' ok':(line.indexOf('⚠')>-1||line.indexOf('🚨')>-1||line.indexOf('✗')>-1?' warn':(line.indexOf('$')==0?' dim':'')));
+    if(line.indexOf('✓')==0) d.className='logline ok'; if(line.indexOf('⚠')==0||line.indexOf('🚨')==0) d.className='logline warn';
+    d.style.animationDelay=(i*0.28)+'s'; d.textContent=line; el.appendChild(d);
+  });
+}
+function ask(){
+  var q=$('q').value.trim(); if(!q) return;
+  var c=findCase(q)||genericCase(q);
+  var btn=$('askBtn'); btn.disabled=true; btn.textContent='Asking both…';
+  $('ragAns').innerHTML='<span class="thinking">Searching the soup<span class="dot">…</span></span>';
+  $('erieAns').innerHTML='<span class="thinking">Checking the record<span class="dot">…</span></span>';
+  typeLines($('ragLog'), c.ragLog); typeLines($('erieLog'), c.erieLog);
+
+  setTimeout(function(){
+    // RAG retrieval
+    $('ragRet').innerHTML=c.ragChunks.map(function(ch){
+      return '<div class="chunk"><meta><span>'+ch.id+'</span><span>sim '+ch.score.toFixed(2)+'</span></meta><p>'+ch.text+'</p><div class="scorebar"><i style="width:'+Math.round(ch.score*100)+'%"></i></div></div>';
+    }).join('');
+    $('ragPrompt').textContent='SYSTEM: Answer using the context below.\n\nCONTEXT:\n'+c.ragChunks.map(function(ch){return ch.text}).join('\n---\n')+'\n\nQUESTION: '+q;
+    $('ragAns').innerHTML='<p style="margin:0">'+c.ragAns+'</p>'+(c.ragWarn?'<div class="warn">'+c.ragWarn+'</div>':'');
+    var rTokens=c.ragChunks.length*160+90;
+    $('ragMetrics').innerHTML='<div class="metric"><b>'+c.ragChunks.length+'</b><span>Chunks</span></div><div class="metric"><b>~'+rTokens+'</b><span>Prompt tokens</span></div><div class="metric"><b>0</b><span>Verified cites</span></div>';
+
+    // ERIE retrieval
+    if(c.erieKids.length){
+      var entries=c.erieKids.map(function(k){return RECORD[k-1]});
+      $('erieRet').innerHTML=entries.map(function(e){return entryHTML(e)}).join('');
+      $('eriePrompt').textContent='RECIPE:\n1. Use ONLY the facts below.\n2. Cite the KID for every claim.\n3. If the answer is not in the facts, reply: I do not know.\n\nINGREDIENTS:\n'+entries.map(function(e){return '[KID '+e.kid+' · trust 8] '+e.fact}).join('\n')+'\n\nQUESTION: '+q;
+      $('erieAns').innerHTML='<p style="margin:0">'+c.erieAns+'</p>';
+      $('erieMetrics').innerHTML='<div class="metric"><b>'+entries.length+'</b><span>Entries</span></div><div class="metric"><b>~'+(entries.length*38+60)+'</b><span>Prompt tokens</span></div><div class="metric"><b>'+entries.length+'</b><span>Citations</span></div>';
+      renderRecord($('recordSearch').value, c.erieKids);
+    } else {
+      $('erieRet').innerHTML='<div class="empty">No entry in KIDs 1–27 answers this. ERIE retrieved <strong>nothing</strong> — on purpose.</div>';
+      $('eriePrompt').textContent='RECIPE:\n1. Use ONLY the facts below.\n2. Cite the KID for every claim.\n3. If the answer is not in the facts, reply: I do not know.\n\nINGREDIENTS:\n(none — lookup returned empty)\n\nQUESTION: '+q;
+      $('erieAns').innerHTML='<div class="dontknow">I do not know.<br><span style="font-weight:400; font-size:14px">The record (KIDs 1–27, Frankenstein) contains no entry on this. ERIE will not build an answer out of passages that merely sound close.</span></div>';
+      $('erieMetrics').innerHTML='<div class="metric"><b>0</b><span>Entries</span></div><div class="metric"><b>~42</b><span>Prompt tokens</span></div><div class="metric"><b>0</b><span>Fabricated</span></div>';
+      renderRecord($('recordSearch').value, []);
+    }
+    btn.disabled=false; btn.textContent='Ask Both →';
+  }, 900);
+}
+$('askBtn').addEventListener('click', ask);
+$('q').addEventListener('keydown', function(e){ if(e.key==='Enter') ask(); });
+document.querySelectorAll('.chip').forEach(function(ch){ ch.addEventListener('click', function(){ $('q').value=ch.getAttribute('data-q'); ask(); }); });
+$('recordSearch').addEventListener('input', function(){ renderRecord(this.value, []); });
+renderRecord('', []);
+ask();
+</script>
+</body>
+</html>
