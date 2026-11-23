@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>ERIE One Pager</title>
+<style>
+  @page { size: Letter; margin: 16mm 18mm; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body { font-family: Georgia, 'Times New Roman', serif; color: #1c1913; line-height: 1.45; font-size: 12.5px; }
+  a { color: #0f766e; text-decoration: none; }
+  .kicker { font-family: ui-monospace, Menlo, monospace; font-size: 9px; letter-spacing: .16em; text-transform: uppercase; color: #6b6353; }
+  h1 { font-size: 40px; line-height: 1; margin: 4px 0 2px; letter-spacing: -.02em; }
+  .sub { font-size: 15px; color: #6b6353; margin: 0 0 10px; }
+  .sub strong { color: #1c1913; }
+  h2 { font-size: 14px; margin: 14px 0 4px; text-transform: uppercase; letter-spacing: .06em; color: #0f766e; }
+  p { margin: 5px 0; }
+  ul { margin: 5px 0; padding-left: 18px; }
+  li { margin: 4px 0; }
+  table { width: 100%; border-collapse: collapse; margin-top: 6px; }
+  th, td { text-align: left; padding: 5px 8px; border-bottom: 1px solid #ddd3bd; font-size: 12.5px; }
+  th { font-family: ui-monospace, Menlo, monospace; font-size: 9px; letter-spacing: .12em; text-transform: uppercase; color: #6b6353; }
+  td.price { font-weight: 700; white-space: nowrap; }
+  .rule { border: none; border-top: 2px solid #1c1913; margin: 10px 0 0; }
+  .foot { margin-top: 14px; padding-top: 8px; border-top: 1px solid #ddd3bd; color: #6b6353; font-size: 11px; }
+</style>
+</head>
+<body>
+
+<div class="kicker">VOLSHi</div>
+<h1>ERIE</h1>
+<p class="sub"><strong>Epistemic Retrieval and Investigation Engine.</strong> Every answer cited to the record, or no answer at all.</p>
+<hr class="rule" />
+
+<h2>What it does</h2>
+<ul>
+  <li><strong>Deterministic, model-free retrieval</strong> over a connected corpus. No model sits in the retrieval path, so the same question gets the same answer every time.</li>
+  <li><strong>Every answer is cited</strong> to record entries with a KID, a birth stamp, and a trust grade. You can check where every part of an answer came from.</li>
+  <li><strong>It says cannot-answer</strong> when the record does not support an answer. It never guesses to fill a gap.</li>
+  <li><strong>It kills hallucinations on a connected corpus.</strong> Nothing reaches the answer that is not in the record.</li>
+</ul>
+
+<h2>How it differs from RAG</h2>
+<p>RAG retrieves passages, dumps them in the prompt, and asks the model to build an answer. ERIE hands the model the ingredients and the recipe: the facts, cited and trust-graded, plus how to use them. Try it: <a href="https://volshi-ai.github.io/info/erie/rag-vs-erie-demo/">volshi-ai.github.io/info/erie/rag-vs-erie-demo/</a></p>
+
+<h2>Pricing</h2>
+<table>
+  <tr><th>Plan</th><th>Price</th></tr>
+  <tr><td>Starter</td><td class="price">$49 / month</td></tr>
+  <tr><td>Business</td><td class="price">$149 / month</td></tr>
+  <tr><td>Heavy</td><td class="price">$499 / month</td></tr>
+  <tr><td>On-prem</td><td class="price">from $6,000 / year (annual only)</td></tr>
+</table>
+<p>Every plan starts with a 2-week free pilot.</p>
+
+<h2>Sales partners</h2>
+<p>50% commission in year one on ERIE, paid monthly from client spend.</p>
+
+<div class="foot">
+  Contact: <a href="mailto:founder@volshi.com">founder@volshi.com</a> &middot; <a href="https://volshi.com">volshi.com</a> &middot; Demo: <a href="https://volshi-ai.github.io/info/erie/rag-vs-erie-demo/">RAG vs ERIE</a>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="color-scheme" content="light dark" />
+<title>ERIE: Epistemic Retrieval and Investigation Engine</title>
+<style>
+  :root{
+    --bg:#f6f3ec; --panel:#fffdf8; --panel2:#efe9db; --ink:#1c1913; --muted:#6b6353; --line:#ddd3bd;
+    --erie:#0f766e; --erie-bg:#ccfbf1; --erie-soft:#ecfdf9; --erie-line:#8fd8cf;
+    --radius:14px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#131109; --panel:#1d1a12; --panel2:#262218; --ink:#f0ead8; --muted:#a89d85; --line:#3a3524;
+      --erie-bg:#07332e; --erie-soft:#082420; --erie-line:#145a52; }
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{background:var(--bg); color:var(--ink); font-family: Georgia, 'Times New Roman', serif; line-height:1.55;}
+  a{color:var(--erie)}
+  .wrap{max-width:860px; margin:0 auto; padding:24px 18px 56px}
+  .top{border-bottom:2px solid var(--ink); padding-bottom:16px; margin-bottom:20px}
+  .kicker{font-family: ui-monospace, Menlo, monospace; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted)}
+  h1{font-size:clamp(30px,5vw,48px); line-height:1; margin:10px 0 8px; letter-spacing:-.02em}
+  h1 em{font-style:italic}
+  .lede{font-size:18px; max-width:640px; color:var(--muted); margin:0}
+  .lede strong{color:var(--ink)}
+  h2{font-size:22px; margin:28px 0 8px}
+  p{margin:8px 0}
+  ul{margin:8px 0; padding-left:22px}
+  li{margin:6px 0}
+  .card{background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:16px 18px; margin-top:12px}
+  .card.erie{border-top:6px solid var(--erie)}
+  table{width:100%; border-collapse:collapse; margin-top:12px; background:var(--panel)}
+  th,td{text-align:left; padding:10px 12px; border-bottom:1px solid var(--line); font-size:15px}
+  th{font-family:ui-monospace, Menlo, monospace; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted)}
+  td.price{font-weight:700; white-space:nowrap}
+  .btn{display:inline-block; background:var(--ink); color:var(--bg); text-decoration:none; font-weight:700; padding:12px 20px; border-radius:10px; margin-top:12px}
+  .btn.ghost{background:transparent; color:var(--ink); border:1.5px solid var(--ink)}
+  .muted{color:var(--muted); font-size:14px}
+  .foot{border-top:1px solid var(--line); margin-top:36px; padding-top:14px; color:var(--muted); font-size:14px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="top">
+    <div class="kicker">VOLSHi</div>
+    <h1>ERIE</h1>
+    <p class="lede"><strong>Epistemic Retrieval and Investigation Engine.</strong> Every answer cited to the record, or no answer at all.</p>
+  </div>
+
+  <h2>What ERIE does</h2>
+  <div class="card erie">
+    <ul>
+      <li><strong>Deterministic, model-free retrieval</strong> over a connected corpus. No model sits in the retrieval path, so the same question gets the same answer every time.</li>
+      <li><strong>Every answer is cited</strong> to record entries with a KID, a birth stamp, and a trust grade. You can check where every part of an answer came from.</li>
+      <li><strong>It says cannot-answer</strong> when the record does not support an answer. It never guesses to fill a gap.</li>
+      <li><strong>It kills hallucinations on a connected corpus.</strong> Nothing reaches the answer that is not in the record.</li>
+    </ul>
+  </div>
+
+  <h2>How it differs from RAG</h2>
+  <p>RAG retrieves passages, dumps them in the prompt, and asks the model to build an answer. ERIE hands the model the ingredients and the recipe: the facts, cited and trust-graded, plus how to use them.</p>
+  <p>See the difference yourself. One chat input goes to both RAG and ERIE, with an inspection terminal to compare their outputs.</p>
+  <p><a class="btn" href="https://volshi-ai.github.io/info/erie/rag-vs-erie-demo/">Try the RAG vs ERIE demo</a></p>
+
+  <h2>Pricing</h2>
+  <table>
+    <tr><th>Plan</th><th>Price</th></tr>
+    <tr><td>Starter</td><td class="price">$49 / month</td></tr>
+    <tr><td>Business</td><td class="price">$149 / month</td></tr>
+    <tr><td>Heavy</td><td class="price">$499 / month</td></tr>
+    <tr><td>On-prem</td><td class="price">from $6,000 / year (annual only)</td></tr>
+  </table>
+  <p>Every plan starts with a 2-week free pilot.</p>
+
+  <h2>Sales partners</h2>
+  <p>50% commission in year one on ERIE, paid monthly from client spend.</p>
+
+  <h2>Contact</h2>
+  <p>Email <a href="mailto:founder@volshi.com">founder@volshi.com</a>. More at <a href="https://volshi.com">volshi.com</a>.</p>
+  <p><a class="btn ghost" href="erie-one-pager.pdf">Download the one-pager (PDF)</a></p>
+
+  <div class="foot">
+    ERIE is built by VOLSHi. Deterministic retrieval, cited answers, no guessing.
+  </div>
+
+</div>
+</body>
+</html>
