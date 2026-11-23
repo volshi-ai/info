@@ -55,7 +55,7 @@ ARCHE is an active VOLSHi engine under continued development. Its pressure, cons
 - [ERIE](https://github.com/ArchePersona/ERIE-info) — evidence, knowledge, and investigation
 - [ELLE](https://github.com/CenturionOversight/ELLE) — external learning and developmental continuity
 - [PEEP](https://github.com/ArchePersona/PEEP-info) — execution observation
-- [RATTER](https://github.com/ArchePersona/RATTER-info) — operational telemetry
+- [RATR](https://github.com/ArchePersona/RATTER-info) — operational telemetry
 - [ARCHEMADA](https://github.com/ArchePersona/ARCHEMADA-info) — controlled AI-assisted software construction
 - [ARCHESTRATOR](https://github.com/CenturionOversight/ARCHESTRATOR-info) — software engineering lifecycle infrastructure
 - [SHERLOCK](https://github.com/ArchePersona/SHERLOCK-info) — evidence-driven reconstruction and investigation

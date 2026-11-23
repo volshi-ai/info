@@ -1,10 +1,10 @@
 # Support
 
-RATTER is under active development.
+RATR is under active development.
 
 ## Public Information
 
-This repository is the public information surface for RATTER. Documentation may change as the product develops.
+This repository is the public information surface for RATR. Documentation may change as the product develops.
 
 ## Product and Business Inquiries
 
@@ -16,6 +16,6 @@ Do not report suspected vulnerabilities publicly. See [SECURITY.md](SECURITY.md)
 
 ## Source Code and Private Technical Material
 
-The RATTER implementation is maintained separately and is not distributed through this repository.
+The RATR implementation is maintained separately and is not distributed through this repository.
 
 Public documentation does not grant access to private repositories, source code, internal systems, proprietary architecture, algorithms, telemetry mechanisms, protocols, or non-public interfaces.

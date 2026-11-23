@@ -24,6 +24,9 @@ The public boundary is intentionally expressed in responsibilities and externall
 
 ## Core Systems
 
+### [KATIE](https://trifacta-api.onrender.com)
+**The record.** A tamper-evident, append-only knowledge record. Every fact it holds carries its birth stamp, its authority, and its provenance, so what the system believed when it acted can always be checked.
+
 ### [ERIE](https://github.com/ArchePersona/ERIE-info)
 **Knowing.** Evidence, provenance, structured knowledge, and evidence-grounded investigation outside the model.
 
@@ -41,7 +44,7 @@ The public boundary is intentionally expressed in responsibilities and externall
 ### [PEEP](https://github.com/ArchePersona/PEEP-info)
 **Execution observation.** An independent view of what execution actually did across operational surfaces.
 
-### [RATTER](https://github.com/ArchePersona/RATTER-info)
+### [RATR](https://github.com/ArchePersona/RATTER-info)
 **Operational telemetry.** An outside operational record that does not depend on an intelligent system's own account of its behavior.
 
 ### BOUNCER
@@ -60,6 +63,10 @@ The public boundary is intentionally expressed in responsibilities and externall
 
 ### CTRL TOWER
 **Operator control.** Human-facing operational oversight for autonomous and semi-autonomous work.
+
+## Live API
+
+**[TRIFACTA](https://trifacta-api.onrender.com)** is the live API: the KATIE record with ERIE on top. Ask a question and it answers from the record, and every answer carries its proof, the KID, the birth stamp, the trust score, and the source it came from. If the record does not know, it says so. It never guesses.
 
 ## Applications and Evidence Surfaces
 
@@ -94,9 +101,11 @@ Public documentation for VOLSHI systems lives in this repo, one folder per syste
 - [arche](./arche/) — ARCHE
 - [archemada](./archemada/) — ARCHEMADA
 - [erie](./erie/) — ERIE
+- [katie](./katie/) — KATIE
 - [peep](./peep/) — PEEP
-- [ratter](./ratter/) — RATTER
+- [ratr](./ratter/) — RATR
 - [sherlock](./sherlock/) — SHERLOCK
+- [trifacta](./trifacta/) — TRIFACTA
 
 ## Company
 

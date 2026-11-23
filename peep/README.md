@@ -51,7 +51,7 @@ PEEP is an active execution-observation engine under continued development. The 
 ## Explore ARCHETRON
 
 - [ARCHETRON](https://github.com/CenturionOversight/ARCHETRON) — the VOLSHi technology ecosystem
-- [RATTER](https://github.com/ArchePersona/RATTER-info) — operational telemetry built from observable activity
+- [RATR](https://github.com/ArchePersona/RATTER-info) — operational telemetry built from observable activity
 - [ERIE](https://github.com/ArchePersona/ERIE-info) — evidence, knowledge, and investigation
 - [ARCHE](https://github.com/ArchePersona/ARCHE-info) — attention allocation
 - [ELLE](https://github.com/CenturionOversight/ELLE) — external learning and developmental continuity

@@ -4,7 +4,7 @@
 
 Do not disclose suspected vulnerabilities publicly through repository issues, discussions, social media, or other public channels.
 
-If you believe you have identified a security issue affecting RATTER or a VOLSHi-controlled RATTER surface, contact VOLSHi privately through an official contact channel.
+If you believe you have identified a security issue affecting RATR or a VOLSHi-controlled RATR surface, contact VOLSHi privately through an official contact channel.
 
 Where practical, include the affected surface, observed behavior, reproduction steps, potential impact, and relevant logs or screenshots with credentials and sensitive information removed.
 
@@ -14,7 +14,7 @@ Do not include passwords, API keys, access tokens, private customer information,
 
 ## Scope of This Repository
 
-`RATTER-info` is a public information repository. It does not contain the private RATTER source code or proprietary implementation.
+`RATTER-info` is a public information repository. It does not contain the private RATR source code or proprietary implementation.
 
 ## Disclosure
 

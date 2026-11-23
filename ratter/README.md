@@ -1,20 +1,20 @@
-# RATTER
+# RATR
 
 **Independent operational telemetry for autonomous intelligence.**
 
-RATTER is the telemetry and operational-observation engine within the VOLSHi span between machine intelligence and human experience. It preserves an outside operational record so accountability does not depend on the intelligence system's own account of what happened.
+RATR is the telemetry and operational-observation engine within the VOLSHi span between machine intelligence and human experience. It preserves an outside operational record so accountability does not depend on the intelligence system's own account of what happened.
 
-As autonomous systems perform more work, operators need more than the system's own assertion that everything went correctly. RATTER preserves an independent operational record of what was reported, when it occurred, and how activity unfolded across a run.
+As autonomous systems perform more work, operators need more than the system's own assertion that everything went correctly. RATR preserves an independent operational record of what was reported, when it occurred, and how activity unfolded across a run.
 
 Its central question is simple:
 
 > **What actually happened?**
 
-> This repository is the public information surface for RATTER. It does not contain the private implementation.
+> This repository is the public information surface for RATR. It does not contain the private implementation.
 
-## What RATTER does
+## What RATR does
 
-RATTER provides operational visibility into activity reported by running systems, including:
+RATR provides operational visibility into activity reported by running systems, including:
 
 - events over time;
 - session and run activity;
@@ -26,7 +26,7 @@ RATTER provides operational visibility into activity reported by running systems
 
 ## A critical boundary
 
-RATTER observes telemetry. It does not claim telemetry reveals hidden reasoning or private internal state.
+RATR observes telemetry. It does not claim telemetry reveals hidden reasoning or private internal state.
 
 Its conclusions are bounded by the operational information it actually receives.
 
@@ -36,11 +36,11 @@ That distinction matters: an external record can support claims about observable
 
 Trust in autonomous systems should not depend entirely on self-reporting.
 
-RATTER gives operators an outside operational view that can be inspected independently of the system being observed.
+RATR gives operators an outside operational view that can be inspected independently of the system being observed.
 
 ## Development status
 
-RATTER is an active VOLSHi telemetry engine under continued development. It establishes an independent operational record around intelligent execution so observable behavior can be inspected without relying solely on system self-reporting.
+RATR is an active VOLSHi telemetry engine under continued development. It establishes an independent operational record around intelligent execution so observable behavior can be inspected without relying solely on system self-reporting.
 
 Public documentation describes externally relevant capabilities; private integrity mechanisms, protocols, data structures, and control logic remain private.
 
@@ -65,7 +65,7 @@ Public documentation describes externally relevant capabilities; private integri
 
 ## Repository scope
 
-`RATTER-info` is a public documentation repository. Publication does not grant access to RATTER source code, private systems, non-public interfaces, or proprietary VOLSHi technology.
+`RATTER-info` is a public documentation repository. Publication does not grant access to RATR source code, private systems, non-public interfaces, or proprietary VOLSHi technology.
 
 ---
 

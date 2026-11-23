@@ -1,18 +1,18 @@
-# RATTER Public Information License
+# RATR Public Information License
 
 **Version 1.0 — August 2026**
 
 Copyright © 2026 VOLSHi. All rights reserved.
 
-This repository contains documentation and informational material relating to RATTER and the ARCHETRON ecosystem (the **Materials**).
+This repository contains documentation and informational material relating to RATR and the ARCHETRON ecosystem (the **Materials**).
 
 The Materials are made publicly viewable for informational, evaluation, and reference purposes only.
 
 No license or right is granted to copy, modify, distribute, sublicense, sell, commercialize, reverse engineer, create derivative works from, or otherwise exploit the Materials except with prior written permission from VOLSHi or as otherwise required by applicable law.
 
-Publication of these Materials does not grant any license to RATTER software, ARCHETRON ecosystem software, source code, object code, APIs, models, algorithms, architecture, telemetry mechanisms, integrity systems, protocols, trademarks, service marks, trade dress, patents, patent applications, trade secrets, know-how, or other intellectual property.
+Publication of these Materials does not grant any license to RATR software, ARCHETRON ecosystem software, source code, object code, APIs, models, algorithms, architecture, telemetry mechanisms, integrity systems, protocols, trademarks, service marks, trade dress, patents, patent applications, trade secrets, know-how, or other intellectual property.
 
-RATTER, ARCHETRON, and associated product names, marks, logos, and branding are the property of their respective owner and may not be used to imply endorsement, affiliation, or authorization without permission.
+RATR, ARCHETRON, and associated product names, marks, logos, and branding are the property of their respective owner and may not be used to imply endorsement, affiliation, or authorization without permission.
 
 THE MATERIALS ARE PROVIDED "AS IS" FOR INFORMATIONAL PURPOSES, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, NON-INFRINGEMENT, ACCURACY, OR AVAILABILITY.
 
